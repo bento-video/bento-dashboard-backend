@@ -1,8 +1,8 @@
 import { Router } from "express";
-import actions from "../aws";
+import awsActions from "../aws";
 import asyncRoute from "../helpers";
 const router = Router();
-const { getAllVideos, getVideo, generateUploadParams } = actions;
+const { getAllVideos, getVideo, generateUploadParams, addVideo } = awsActions;
 
 const getVideosRoute = async (req, res) => {
   console.log("Received GET /videos");
@@ -30,7 +30,6 @@ const getVideoRoute = async (req, res) => {
 
 const startUploadRoute = (req, res) => {
   console.log("Received POST /videos/new");
-  console.log("Req body: " + Object.toString(req.body));
   const uploadParams = generateUploadParams(req.body.filename);
 
   if (uploadParams.error) {
@@ -40,8 +39,26 @@ const startUploadRoute = (req, res) => {
   }
 };
 
+const addToVideosTableRoute = async (req, res) => {
+  console.log("Received POST /videos/");
+  const { id, filename } = req.body;
+  const videoData = await addVideo(id, filename);
+  console.log(videoData);
+  if (videoData.error) {
+    res
+      .status(500)
+      .json({ msg: "The server encountered an error!", err: videoData.error });
+  } else {
+    // const videoData = videoData.data;
+    // console.log("parsed videoData data", videoData);
+
+    res.status(200).json(videoData);
+  }
+};
+
 router.get("/", asyncRoute(getVideosRoute));
 router.get("/:id", asyncRoute(getVideoRoute));
 router.post("/new", startUploadRoute);
+router.post("/", asyncRoute(addToVideosTableRoute));
 
 export default router;

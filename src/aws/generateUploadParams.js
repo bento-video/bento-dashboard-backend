@@ -9,7 +9,7 @@ var credentials = {
   accessKeyId: process.env.S3_ACCESS_KEY,
   secretAccessKey: process.env.S3_SECRET_KEY,
 };
-AWS.config.update({ credentials: credentials, region: process.env.REGION });
+AWS.config.update({ region: process.env.REGION });
 
 const s3 = new AWS.S3({ signatureVersion: "v4" });
 const START_BUCKET = process.env.START_BUCKET;
