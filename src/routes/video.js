@@ -33,11 +33,10 @@ const startUploadRoute = (req, res) => {
   console.log("Req body: " + Object.toString(req.body));
   const uploadParams = generateUploadParams(req.body.filename);
 
-  if (uploadParams.url) {
-    res.send(uploadParams);
+  if (uploadParams.error) {
+    res.status(500).json(uploadParams);
   } else {
-    res.status(500);
-    res.send("The server encountered an error.");
+    res.status(200).json(uploadParams);
   }
 };
 

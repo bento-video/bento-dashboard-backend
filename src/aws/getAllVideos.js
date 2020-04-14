@@ -16,6 +16,7 @@ const getAllVideos = async () => {
     .scan(params)
     .promise()
     .then((data) => {
+      console.log(data.Items);
       const videos = data.Items.map((e) => {
         return {
           id: e.id.S,

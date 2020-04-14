@@ -3,10 +3,14 @@ import "dotenv/config";
 import uuidv4 from "uuid/v4";
 const path = require("path");
 
-const s3 = new AWS.S3();
-const START_BUCKET = process.env.START_BUCKET;
+var credentials = {
+  accessKeyId: process.env.S3_ACCESS_KEY,
+  secretAccessKey: process.env.S3_SECRET_KEY,
+};
+AWS.config.update({ credentials: credentials, region: process.env.REGION });
 
-AWS.config.update({ region: "us-east-1" });
+const s3 = new AWS.S3({ signatureVersion: "v4" });
+const START_BUCKET = process.env.START_BUCKET;
 
 const contentType = (filename) => {
   let contentType;
@@ -26,12 +30,21 @@ const contentType = (filename) => {
   return contentType;
 };
 
-const getParams = (filename, key) => {
+const getParams = (filename) => {
   return {
     Bucket: START_BUCKET,
-    Key: key,
-    ContentType: contentType(filename),
-    Expires: 3600,
+    Expires: 3600, //time to expire in seconds
+
+    Fields: {
+      key: filename,
+    },
+    conditions: [
+      { acl: "private" },
+      { success_action_status: "201" },
+      ["starts-with", "$key", ""],
+      ["content-length-range", 0, 3221225472],
+      { "x-amz-algorithm": "AWS4-HMAC-SHA256" },
+    ],
   };
 };
 
@@ -39,22 +52,18 @@ const generateUploadParams = (filename) => {
   console.log("In generateUploadParams...");
   // validate filename to ensure valid extension
   const newVideoId = uuidv4();
-  const key = `${newVideoId}/${filename}`;
-  const params = getParams(filename, key);
+
+  const params = getParams(filename);
 
   console.log(`newVideoId: ${newVideoId}`);
-  console.log(`key: ${key}`);
+  console.log(`key: ${filename}`);
   console.log(`params: ${params}`);
 
-  const uploadUrl = s3.getSignedUrl("putObject", params);
+  const postData = s3.createPresignedPost(params);
 
-  console.log(uploadUrl);
+  console.log(postData);
 
-  return {
-    url: uploadUrl,
-    videoId: newVideoId,
-    key: key,
-  };
+  return postData;
 };
 
 export default generateUploadParams;
