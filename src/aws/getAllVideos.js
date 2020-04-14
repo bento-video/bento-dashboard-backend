@@ -17,14 +17,15 @@ const getAllVideos = async () => {
     .promise()
     .then((data) => {
       console.log(data.Items);
-      const videos = data.Items.map((e) => {
+      const videos = data.Items.map((item) => {
         return {
-          id: e.id.S,
-          filename: e.filename.S,
-          format: e.format.S,
-          size: e.size.S,
-          resolution: e.resolution.S,
-          versions: e.versions.N,
+          id: item.id.S,
+          filename: item.filename.S,
+          format: item.format.S,
+          size: item.size.S,
+          resolution: item.resolution.S,
+          versions: item.versions.N,
+          duration: item.duration.N,
         };
       });
       console.log("Received from Videos: ", videos);

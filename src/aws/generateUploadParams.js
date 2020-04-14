@@ -1,6 +1,8 @@
 import AWS from "aws-sdk";
 import "dotenv/config";
-import uuidv4 from "uuid/v4";
+import hexoid from "hexoid";
+
+const toID = hexoid();
 const path = require("path");
 
 var credentials = {
@@ -51,16 +53,16 @@ const getParams = (filename) => {
 const generateUploadParams = (filename) => {
   console.log("In generateUploadParams...");
   // validate filename to ensure valid extension
-  const newVideoId = uuidv4();
+  const videoId = toID(6);
 
   const params = getParams(filename);
 
-  console.log(`newVideoId: ${newVideoId}`);
+  console.log(`videoId: ${videoId}`);
   console.log(`key: ${filename}`);
   console.log(`params: ${params}`);
 
   const postData = s3.createPresignedPost(params);
-
+  postData.videoId = videoId;
   console.log(postData);
 
   return postData;
