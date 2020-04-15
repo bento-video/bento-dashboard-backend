@@ -7,8 +7,8 @@ const JOBS_TABLE = process.env.JOBS_TABLE;
 const JOBS_INDEX = process.env.JOBS_INDEX;
 const ddb = new AWS.DynamoDB();
 
-const getVideo = async (id) => {
-  console.log("In getVideo");
+const getVideoVersions = async (id) => {
+  console.log("In getVideoVersions");
 
   const getVideoParams = {
     TableName: VIDEOS_TABLE,
@@ -71,4 +71,4 @@ const getVideo = async (id) => {
   return videoData;
 };
 
-export default getVideo;
+export default getVideoVersions;

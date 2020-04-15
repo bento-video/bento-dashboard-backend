@@ -1,11 +1,13 @@
 // import videoUpload from "./videoUpload";
 import getAllVideos from "./getAllVideos";
-import getVideo from "./getVideo";
+import getVideoVersions from "./getVideoVersions";
 import generateUploadParams from "./generateUploadParams";
 import addVideo from "./addVideo";
+import startVersionJob from "./startVersionJob";
 export default {
   getAllVideos,
-  getVideo,
+  getVideoVersions,
   generateUploadParams,
   addVideo,
+  startVersionJob,
 };
