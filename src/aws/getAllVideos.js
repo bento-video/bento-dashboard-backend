@@ -22,7 +22,7 @@ const getAllVideos = async () => {
           id: item.id.S,
           filename: item.filename.S,
           format: item.format.S,
-          size: item.size.S,
+          size: item.size.N,
           resolution: item.resolution.S,
           versions: item.versions.N,
           duration: item.duration.N,
