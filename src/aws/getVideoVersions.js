@@ -59,9 +59,11 @@ const getVideoVersions = async (id) => {
         return {
           id: item.id.N,
           videoId: item.videoId.S,
-          versionUrl: item.versionUrl.S,
+          versionUrl: item.versionUrl ? item.versionUrl.S : "",
           resolution: item.resolution.S,
           status: item.status.S,
+          filename: item.filename.S,
+          outputType: item.outputType.S,
         };
       });
     })
