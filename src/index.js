@@ -12,3 +12,4 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use("/videos", routes.video);
+app.use("/versions", routes.version);

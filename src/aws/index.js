@@ -1,13 +1,17 @@
-// import videoUpload from "./videoUpload";
 import getAllVideos from "./getAllVideos";
 import getVideoVersions from "./getVideoVersions";
 import generateUploadParams from "./generateUploadParams";
-import addVideo from "./addVideo";
+import addVideoToTable from "./addVideoToTable";
 import startVersionJob from "./startVersionJob";
+import deleteVersion from "./deleteVersion";
+import deleteVideo from "./deleteVideo";
+
 export default {
   getAllVideos,
   getVideoVersions,
   generateUploadParams,
-  addVideo,
+  addVideoToTable,
   startVersionJob,
+  deleteVersion,
+  deleteVideo,
 };
