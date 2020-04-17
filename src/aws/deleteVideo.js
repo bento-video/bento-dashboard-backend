@@ -12,11 +12,6 @@ const ddb = new AWS.DynamoDB();
 const s3 = new AWS.S3();
 
 const deleteVideo = async (videoId) => {
-  //   a. get list of jobIds, and filename from Jobs with videoId = id
-  // b. for each jobId, deleteVersion
-  // c. delete video from start bucket where key = job.filename
-  // d. delete record from videos table where id = videoId
-
   const getJobsParams = {
     TableName: JOBS_TABLE,
     IndexName: JOBS_INDEX,

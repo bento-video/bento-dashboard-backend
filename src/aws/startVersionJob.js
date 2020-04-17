@@ -6,11 +6,13 @@ const executor = process.env.EXECUTOR_LAMBDA;
 
 const startVersionJob = async (id, filename, resolution) => {
   console.log(`in startVersionJob`);
+  const jobId = Date.now();
   const payload = {
     "body-json": {
       key: filename,
       videoId: id,
       res: resolution,
+      jobId: jobId,
     },
   };
 
@@ -27,6 +29,10 @@ const startVersionJob = async (id, filename, resolution) => {
     .invoke(invokeParams)
     .promise()
     .catch((err) => err);
+
+  return {
+    jobId,
+  };
 };
 
 export default startVersionJob;
