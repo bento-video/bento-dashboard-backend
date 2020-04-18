@@ -8,8 +8,8 @@ const lambda = new AWS.Lambda({
 
 const recordUpload = process.env.RECORD_UPLOAD_LAMBDA;
 
-const addVideo = async (id, filename) => {
-  console.log(`In addVideo with id: ${id} filename: ${filename}`);
+const addVideoToTable = async (id, filename) => {
+  console.log(`In addVideoToTable with id: ${id} filename: ${filename}`);
 
   const payload = { id, filename };
   const invokeParams = {
@@ -29,4 +29,4 @@ const addVideo = async (id, filename) => {
   return response.Payload ? JSON.parse(response.Payload) : { error: err };
 };
 
-export default addVideo;
+export default addVideoToTable;

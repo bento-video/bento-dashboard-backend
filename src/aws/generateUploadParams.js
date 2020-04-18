@@ -5,10 +5,6 @@ import hexoid from "hexoid";
 const toID = hexoid();
 const path = require("path");
 
-var credentials = {
-  accessKeyId: process.env.S3_ACCESS_KEY,
-  secretAccessKey: process.env.S3_SECRET_KEY,
-};
 AWS.config.update({ region: process.env.REGION });
 
 const s3 = new AWS.S3({ signatureVersion: "v4" });

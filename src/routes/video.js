@@ -1,11 +1,16 @@
 import { Router } from "express";
-import awsActions from "../aws";
 import asyncRoute from "../helpers";
+import getAllVideos from "../aws/getAllVideos";
+import getVideoVersions from "../aws/getVideoVersions";
+import generateUploadParams from "../aws/generateUploadParams";
+import addVideoToTable from "../aws/addVideoToTable";
+import startVersionJob from "../aws/startVersionJob";
+import deleteVideo from "../aws/deleteVideo";
+
 const router = Router();
-const { getAllVideos, getVideo, generateUploadParams, addVideo } = awsActions;
 
 const getVideosRoute = async (req, res) => {
-  console.log("Received GET /videos");
+  console.log("In getVideosRoute GET /videos");
 
   const videos = await getAllVideos();
 
@@ -17,9 +22,9 @@ const getVideosRoute = async (req, res) => {
   }
 };
 
-const getVideoRoute = async (req, res) => {
-  console.log("Received GET /videos/" + req.params.id);
-  const video = await getVideo(req.params.id);
+const getVideoVersionsRoute = async (req, res) => {
+  console.log("In getVideoVersionRoute GET /videos/" + req.params.id);
+  const video = await getVideoVersions(req.params.id);
   if (video) {
     res.send(video);
   } else {
@@ -29,7 +34,7 @@ const getVideoRoute = async (req, res) => {
 };
 
 const startUploadRoute = (req, res) => {
-  console.log("Received POST /videos/new");
+  console.log("In startUploadRoute POST /videos/new");
   const uploadParams = generateUploadParams(req.body.filename);
 
   if (uploadParams.error) {
@@ -40,9 +45,9 @@ const startUploadRoute = (req, res) => {
 };
 
 const addToVideosTableRoute = async (req, res) => {
-  console.log("Received POST /videos/");
+  console.log("In addToVideosTableRoute POST /videos/");
   const { id, filename } = req.body;
-  const videoData = await addVideo(id, filename);
+  const videoData = await addVideoToTable(id, filename);
   console.log(videoData);
   if (videoData.error) {
     res
@@ -56,9 +61,35 @@ const addToVideosTableRoute = async (req, res) => {
   }
 };
 
+const createVersionRoute = async (req, res, next) => {
+  console.log("In createVersionRoute POST /videos/:id/new");
+  const { id, filename, resolution } = req.body;
+  console.log("received", id, filename, resolution);
+  await startVersionJob(id, filename, resolution)
+    .then((jobData) => {
+      console.log("Lambda invoked");
+      res.status(200).json(jobData);
+    })
+    .catch((err) => {
+      next(err);
+    });
+};
+
+const deleteVideoRoute = async (req, res, next) => {
+  console.log("In deleteVideoRoute POST /videos/:id/new");
+  const videoId = req.params.id;
+  await deleteVideo(videoId)
+    .then((_) => {
+      console.log("Video delete completed");
+      res.status(200).send();
+    })
+    .catch((err) => next(err));
+};
+
 router.get("/", asyncRoute(getVideosRoute));
-router.get("/:id", asyncRoute(getVideoRoute));
+router.get("/:id", asyncRoute(getVideoVersionsRoute));
 router.post("/new", startUploadRoute);
 router.post("/", asyncRoute(addToVideosTableRoute));
-
+router.post("/:id/new", asyncRoute(createVersionRoute));
+router.delete("/:id", asyncRoute(deleteVideoRoute));
 export default router;
