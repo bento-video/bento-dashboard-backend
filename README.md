@@ -1,14 +1,13 @@
-# Bento Dashboard backend
+<div align="center">
+  <img src="https://i.imgur.com/LL7X6Ro.png?2">
+</div>
 
-To get started, `npm install`.
+<h1 align="center">Bento Dashboard Server</h2>
 
-Then, configure your server with a .env file.
+## Deployment
 
-From the root folder: `touch .env`
+Bento Dashboard Server connects Bento Dashboard with the pipeline deployed to AWS. Bento Dashboard is built in React with an Express backend that can be run locally for individual use, or deployed to Amazon EC2 for organizational use.
 
-Add the following:
-VIDEOS_TABLE=my_videos_table
-JOBS_TABLE=my_jobs_table
-START_BUCKET=my_start_bucket
-PORT=(whatever port you want to run on)
-REGION=aws_region
+To install and deploy the dashboard, first ensure you have installed [Bento's pipeline](https://github.com/bento-video/bento/blob/master/docs/pipeline-deployment-guide.md) - you will require some of the resources from the pipeline installation in the following steps.
+
+The [deployment guide](https://github.com/bento-video/bento/blob/master/docs/dashboard-deployment-guide.md) (steps one through four) includes a walkthrough to containerize the Express app for easy deployment on EC2 or any other cloud computing platform. Steps five onwards details how to deploy React files on EC2.
